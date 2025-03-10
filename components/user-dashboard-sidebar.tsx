@@ -1,4 +1,4 @@
-import { Home, Notebook, NotebookPen, Users } from "lucide-react";
+import { Home, PenLine } from "lucide-react";
 
 import {
   Sidebar,
@@ -9,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { LogoutButton } from "./logout-button";
 
 // Menu items.
 const items = [
@@ -18,19 +19,12 @@ const items = [
     icon: Home,
   },
   {
-    title: "All Posts",
-    url: "/user/dashboard/posts",
-    icon: Notebook,
+    title: "Register",
+    url: "/user/dashboard/register",
+    icon: PenLine,
   },
   {
-    title: "Create Posts",
-    url: "/user/dashboard/create-post",
-    icon: NotebookPen,
-  },
-  {
-    title: "Registered Users",
-    url: "/user/dashboard/registered-users",
-    icon: Users,
+    icon: LogoutButton,
   },
 ];
 

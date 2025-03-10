@@ -1,8 +1,8 @@
-interface FrontMatterInterface{
-    title: string,
-    description: string ,
-    date: string  ,
-    thumbnail: string 
+interface FrontMatterInterface {
+  title: string;
+  description: string;
+  date: string;
+  thumbnail: string;
 }
 
 interface BlogPost {
@@ -10,3 +10,9 @@ interface BlogPost {
   frontMatter: FrontMatterInterface;
   mdContent: string;
 }
+
+interface VerfifiedResponse {
+  verified: boolean;
+}
+
+interface userData {}

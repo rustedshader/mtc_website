@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { getAllImagesNameInDir } from "@/lib/fileUtils";
+import { getAllImagesNameInBucket } from "@/lib/fileUtils";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
@@ -14,7 +14,7 @@ import { GalleryIcon } from "@/components/gallery-icon";
 import { ZoomIn } from "lucide-react";
 
 export default async function Gallery() {
-  const images = await getAllImagesNameInDir("gallery");
+  const images = await getAllImagesNameInBucket("images", "gallery");
 
   return (
     <div className="min-h-screen w-full dark:bg-black bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center">
@@ -49,7 +49,7 @@ export default async function Gallery() {
                               <ZoomIn className="w-10 h-10 text-white" />
                             </div>
                             <Image
-                              src={`/gallery/${image}`}
+                              src={`${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/gallery/${image}`}
                               alt={imageName}
                               fill
                               className="object-cover group-hover:scale-110 transition-transform duration-300"
@@ -65,9 +65,7 @@ export default async function Gallery() {
 
                     <DialogContent className="max-w-5xl">
                       <DialogHeader className="flex flex-row items-center justify-between">
-                        <DialogTitle>
-
-                        </DialogTitle>
+                        <DialogTitle></DialogTitle>
                         <div className="flex items-center gap-4">
                           <DialogClose />
                         </div>
@@ -75,7 +73,7 @@ export default async function Gallery() {
 
                       <div className="relative aspect-[3/2] w-full mt-4">
                         <Image
-                          src={`/gallery/${image}`}
+                          src={`${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/gallery/${image}`}
                           alt={imageName}
                           fill
                           className="object-contain"

@@ -59,7 +59,10 @@ export default async function Home() {
           playsInline
           className="absolute w-full h-full object-cover"
         >
-          <source src="/assests/hero_background_video.mp4" type="video/mp4" />
+          <source
+            src={`${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/assests/hero_background_video.mp4`}
+            type="video/mp4"
+          />
         </video>
       </section>
 
@@ -100,32 +103,32 @@ export default async function Home() {
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full">
               {siteConfig.sponsers.map((sponsor, index) => (
-                  <Link href={sponsor.link} key={`${index}_link`} target="_blank">
-                    <MagicCard className="w-full opacity-95 transform transition-transform hover:scale-105 h-full">
-                      <div className="p-4 sm:p-6 text-center flex flex-col items-center gap-4">
-                        {sponsor.logo && (
-                          <div className="relative w-full h-20 sm:h-24 flex items-center justify-center">
-                            <Image
-                              src={`/sponsers/${sponsor.logo}`}
-                              alt={`${sponsor.name} logo`}
-                              width={160}
-                              height={80}
-                              className="object-contain opacity-100"
-                            />
-                          </div>
-                        )}
-                        <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
-                          {sponsor.description}
-                        </p>
-                      </div>
-                      <BorderBeam
-                        size={250}
-                        duration={12}
-                        delay={9}
-                        className="rounded-lg"
-                      />
-                    </MagicCard>
-                  </Link>
+                <Link href={sponsor.link} key={`${index}_link`} target="_blank">
+                  <MagicCard className="w-full opacity-95 transform transition-transform hover:scale-105 h-full">
+                    <div className="p-4 sm:p-6 text-center flex flex-col items-center gap-4">
+                      {sponsor.logo && (
+                        <div className="relative w-full h-20 sm:h-24 flex items-center justify-center">
+                          <Image
+                            src={`${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/sponsers/${sponsor.logo}`}
+                            alt={`${sponsor.name} logo`}
+                            width={160}
+                            height={80}
+                            className="object-contain opacity-100"
+                          />
+                        </div>
+                      )}
+                      <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
+                        {sponsor.description}
+                      </p>
+                    </div>
+                    <BorderBeam
+                      size={250}
+                      duration={12}
+                      delay={9}
+                      className="rounded-lg"
+                    />
+                  </MagicCard>
+                </Link>
               ))}
             </div>
           </div>

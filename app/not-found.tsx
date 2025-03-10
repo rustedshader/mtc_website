@@ -21,7 +21,7 @@ export default function NotFound() {
         </p>
         <Image
           className="mx-auto rounded-xl shadow-lg"
-          src="/not-found.png"
+          src={`${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/not-found.png`}
           width={400}
           height={400}
           sizes="(max-width: 768px) 300px, 400px"

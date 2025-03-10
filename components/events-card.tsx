@@ -88,7 +88,7 @@ const EventsCarousel: React.FC<{ blogs: BlogPost[] }> = ({ blogs }) => {
                 </div>
                 <div className="w-full sm:w-auto flex-shrink-0">
                   <Image
-                    src={`/events/${blogs[currentIndex].frontMatter.thumbnail}`}
+                    src={`${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/events/${blogs[currentIndex].frontMatter.thumbnail}`}
                     alt={blogs[currentIndex].frontMatter.title}
                     width={500}
                     height={500}

@@ -16,17 +16,12 @@ model Post {
 }
 
 model RegisteredUsers {
-  Name         String?
-  SAP_ID       BigInt? @map("SAP ID")
-  Course       String?
-  Year         String?
-  Collage_Mail String? @map("Collage Mail")
-  MTC_ID       String? @map("MTC ID")
-  id           BigInt  @id(map: "MTC_Users_pkey") @default(autoincrement())
-}
-
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  student_name           String?
+  university_sap_id      BigInt?
+  university_course      String?
+  university_course_year String?
+  university_email       String?
+  mtc_id                 String?
+  id                     Int      @id(map: "MTC_Users_pkey") @default(autoincrement())
+  is_verified            Boolean? @default(false)
 }

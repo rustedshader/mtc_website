@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
+import { RegisterForm } from "@/components/register-form";
 
-export default async function Dashboard() {
+export default async function RegistrationPage() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -13,7 +14,7 @@ export default async function Dashboard() {
   const userEmail = data.user.email ?? redirect("/login");
 
   async function isUserRegistered() {
-    const request = await fetch(
+    const res = await fetch(
       `${baseUrl}/api/user/is-registered?email=${encodeURIComponent(
         userEmail
       )}`,
@@ -23,12 +24,12 @@ export default async function Dashboard() {
         body: JSON.stringify({ email: userEmail }),
       }
     );
-    const response = await request.json();
-    return response.registered;
+    const json = await res.json();
+    return json.registered;
   }
 
   async function isUserVerified() {
-    const request = await fetch(
+    const res = await fetch(
       `${baseUrl}/api/user/is-verified?email=${encodeURIComponent(userEmail)}`,
       {
         method: "POST",
@@ -36,31 +37,23 @@ export default async function Dashboard() {
         body: JSON.stringify({ email: userEmail }),
       }
     );
-    const response = await request.json();
-    return response.verified;
+    const json = await res.json();
+    return json.verified;
   }
 
   const registered = await isUserRegistered();
   const verified = await isUserVerified();
 
-  return (
-    <div>
-      <p>This is the {userEmail} Dashboard</p>
-      {registered && verified && (
-        <div>
-          <p>You are part of MTC</p>
-        </div>
-      )}
-      {registered && !verified && (
-        <div>
-          <p>Your registration application is in progress.</p>
-        </div>
-      )}
-      {!registered && !verified && (
-        <div>
-          <p>Please go to the registration tab and register.</p>
-        </div>
-      )}
-    </div>
-  );
+  if (registered && verified) {
+    return <div>Registration is Done!</div>;
+  } else if (registered && !verified) {
+    return <div>Your registration application is in progress.</div>;
+  } else {
+    return (
+      <div>
+        <h1>Register</h1>
+        <RegisterForm />
+      </div>
+    );
+  }
 }
