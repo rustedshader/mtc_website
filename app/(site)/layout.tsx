@@ -1,13 +1,15 @@
+// app/(site)/layout.tsx
+import "../globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
-interface AppLayoutProps {
+export default function SiteLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export default function AppLayout({ children }: AppLayoutProps) {
+}) {
   return (
     <div className="border-grid flex min-h-screen flex-1 flex-col">
       <div className="hidden fixed w-full md:block z-50">

@@ -9,10 +9,20 @@ datasource db {
 }
 
 model Post {
-    id Int @id @default(autoincrement())
-    title String
-    content String?
-    published Boolean @default(false)
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean @default(false)
+}
+
+model RegisteredUsers {
+  Name         String?
+  SAP_ID       BigInt? @map("SAP ID")
+  Course       String?
+  Year         String?
+  Collage_Mail String? @map("Collage Mail")
+  MTC_ID       String? @map("MTC ID")
+  id           BigInt  @id(map: "MTC_Users_pkey") @default(autoincrement())
 }
 
 model User {

@@ -4,9 +4,21 @@ CREATE TABLE "Post" (
     "title" TEXT NOT NULL,
     "content" TEXT,
     "published" BOOLEAN NOT NULL DEFAULT false,
-    "authorId" INTEGER,
 
     CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "RegisteredUsers" (
+    "Name" TEXT,
+    "SAP ID" BIGINT,
+    "Course" TEXT,
+    "Year" TEXT,
+    "Collage Mail" TEXT,
+    "MTC ID" TEXT,
+    "id" BIGSERIAL NOT NULL,
+
+    CONSTRAINT "MTC_Users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -21,5 +33,3 @@ CREATE TABLE "User" (
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
--- AddForeignKey
-ALTER TABLE "Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

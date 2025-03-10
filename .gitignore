@@ -65,4 +65,7 @@ next-env.d.ts
 
 # Bun
 bun.lock
+
+# Enviorment Variables
 .env
+.env.local

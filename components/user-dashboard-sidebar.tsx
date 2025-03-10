@@ -1,4 +1,4 @@
-import { Contact, Home, Images, Users } from "lucide-react";
+import { Home, Notebook, NotebookPen, Users } from "lucide-react";
 
 import {
   Sidebar,
@@ -10,31 +10,31 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-// Main Website Menu items.
+// Menu items.
 const items = [
   {
     title: "Home",
-    url: "/",
+    url: "/user/dashboard",
     icon: Home,
   },
   {
-    title: "Our Team",
-    url: "/team",
+    title: "All Posts",
+    url: "/user/dashboard/posts",
+    icon: Notebook,
+  },
+  {
+    title: "Create Posts",
+    url: "/user/dashboard/create-post",
+    icon: NotebookPen,
+  },
+  {
+    title: "Registered Users",
+    url: "/user/dashboard/registered-users",
     icon: Users,
-  },
-  {
-    title: "Gallery",
-    url: "/gallery",
-    icon: Images,
-  },
-  {
-    title: "Contact Us",
-    url: "/contact",
-    icon: Contact,
   },
 ];
 
-export function AppSidebar() {
+export function UserDashboardSidebar() {
   return (
     <Sidebar>
       <SidebarContent>

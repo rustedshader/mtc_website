@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider";
 import { Inter } from "next/font/google";
-
+import { AppSidebar } from "@/components/app-sidebar";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 // We are gonna use Inter font !
 const interSans = Inter({
@@ -16,7 +19,7 @@ const interMono = Inter({
 
 export const metadata: Metadata = {
   title: "Microsoft Technical Community",
-  description: "",
+  description: "The official website of Microsoft Technical Community UPES",
 };
 
 export default function RootLayout({

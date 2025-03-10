@@ -3,8 +3,6 @@
 import { siteConfig } from "@/config/site";
 import { OrbitingCirclesDemo } from "./orbiting-mtc";
 import { MagicCard } from "./ui/magic-card";
-import { Card } from "./ui/card";
-import { BorderBeam } from "./ui/border-beam";
 
 export default function About() {
   return (
