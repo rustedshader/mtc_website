@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function Dashboard() {
   const supabase = await createClient();
@@ -12,55 +13,64 @@ export default async function Dashboard() {
 
   const userEmail = data.user.email ?? redirect("/login");
 
-  async function isUserRegistered() {
-    const request = await fetch(
-      `${baseUrl}/api/user/is-registered?email=${encodeURIComponent(
-        userEmail
-      )}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: userEmail }),
-      }
+  // Fetch user data from the API endpoint that returns registration and verification details.
+  const res = await fetch(
+    `${baseUrl}/api/user/get-user-data?email=${encodeURIComponent(userEmail)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: userEmail }),
+    }
+  );
+
+  const userData = await res.json();
+
+  // If user is not registered (e.g. no mtc_id present), ask them to register.
+  if (!userData.mtc_id) {
+    return (
+      <div>
+        <p>This is the {userEmail} Dashboard</p>
+        <p>Please go to the registration tab and register.</p>
+      </div>
     );
-    const response = await request.json();
-    return response.registered;
   }
 
-  async function isUserVerified() {
-    const request = await fetch(
-      `${baseUrl}/api/user/is-verified?email=${encodeURIComponent(userEmail)}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: userEmail }),
-      }
+  // If user is registered but not yet verified.
+  if (!userData.verified) {
+    return (
+      <div>
+        <p>This is the {userEmail} Dashboard</p>
+        <p>Your registration application is in progress.</p>
+      </div>
     );
-    const response = await request.json();
-    return response.verified;
   }
 
-  const registered = await isUserRegistered();
-  const verified = await isUserVerified();
-
+  // If the user is registered and verified, show their data using shadcn Card components.
   return (
     <div>
       <p>This is the {userEmail} Dashboard</p>
-      {registered && verified && (
-        <div>
-          <p>You are part of MTC</p>
-        </div>
-      )}
-      {registered && !verified && (
-        <div>
-          <p>Your registration application is in progress.</p>
-        </div>
-      )}
-      {!registered && !verified && (
-        <div>
-          <p>Please go to the registration tab and register.</p>
-        </div>
-      )}
+      <Card>
+        <CardHeader>
+          <CardTitle>User Information</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>
+            <strong>Name:</strong> {userData.name}
+          </p>
+          <p>
+            <strong>MTC ID:</strong> {userData.mtc_id}
+          </p>
+          <p>
+            <strong>SAP ID:</strong> {userData.sap_id || "N/A"}
+          </p>
+          <p>
+            <strong>Year:</strong> {userData.year}
+          </p>
+          <p>
+            <strong>Course:</strong> {userData.course}
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Home, PenLine } from "lucide-react";
+import { Home, PenLine, Trophy } from "lucide-react";
 
 import {
   Sidebar,
@@ -19,10 +19,16 @@ const items = [
     icon: Home,
   },
   {
+    title: "Certificates",
+    url: "/user/dashboard/certificates",
+    icon: Trophy,
+  },
+  {
     title: "Register",
     url: "/user/dashboard/register",
     icon: PenLine,
   },
+
   {
     icon: LogoutButton,
   },
