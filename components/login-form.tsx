@@ -16,7 +16,7 @@ import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-const loginSchema = z.object({
+const loginSchema: z.AnyZodObject = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),

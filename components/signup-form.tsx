@@ -16,7 +16,7 @@ import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-const signupSchema = z
+const signupSchema: Zod.ZodEffects<Zod.AnyZodObject> = z
   .object({
     name: z.string().min(2, {
       message: "Name must be at least 2 characters.",
@@ -48,8 +48,7 @@ export function SignupForm() {
   });
 
   async function onSubmit(values: z.infer<typeof signupSchema>) {
-    console.log(values);
-    const formData = new FormData();
+    const formData: FormData = new FormData();
     formData.append("email", values.email);
     formData.append("password", values.password);
     await signup(formData);

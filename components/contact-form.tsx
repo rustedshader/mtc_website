@@ -16,6 +16,8 @@ import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+//TODO Fix Contact Form and Add Functionality !
+
 const formSchema = z.object({
   fullName: z.string().min(2, {
     message: "Name must be at least 2 characters.",

@@ -12,10 +12,14 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import * as z from "zod";
+import { toast } from "sonner";
 
-// Define the form schema
 const registerSchema = z.object({
+  student_name: z.string().min(1, {
+    message: "Please enter your full name",
+  }),
   sap_id: z.string().min(1, {
     message: "Please enter a valid SAP Id",
   }),
@@ -25,57 +29,100 @@ const registerSchema = z.object({
   year: z.string().min(1, {
     message: "Please enter a valid year",
   }),
-  payment_screenshot: z.any(), // Use z.any() for file input since Zod doesn't support File type directly
+  payment_screenshot: z.any().refine((file) => file instanceof File, {
+    message: "Please upload a payment screenshot",
+  }),
   payment_reference_id: z.string().min(1, {
     message: "Please enter a valid payment reference id",
   }),
 });
 
-export function RegisterForm() {
+export function RegisterForm({ user_email }: { user_email: string }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Initialize the form with react-hook-form and Zod resolver
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
+      student_name: "",
       sap_id: "",
       course: "",
       year: "",
-      payment_screenshot: null, // Default value for file input is null
+      payment_screenshot: undefined,
       payment_reference_id: "",
     },
   });
 
   // Handle form submission
   async function onSubmit(values: z.infer<typeof registerSchema>) {
-    // Create a FormData object to handle file uploads
-    const formData = new FormData();
-    formData.append("student_name", "shubhang");
-    formData.append("student_sap_id", values.sap_id);
-    formData.append("student_course", values.course);
-    formData.append("student_course_year", values.year);
-    formData.append("payment_screenshot", values.payment_screenshot); // Append the file
-    formData.append("payment_refrence_number", values.payment_reference_id);
-    formData.append("email", "rustedshader@gmail.com");
+    setIsSubmitting(true);
 
     try {
+      // Create a FormData object to handle file uploads
+      const formData = new FormData();
+      formData.append("student_name", values.student_name);
+      formData.append("email", user_email);
+      formData.append("student_sap_id", values.sap_id);
+      formData.append("student_course", values.course);
+      formData.append("student_course_year", values.year);
+      formData.append("payment_screenshot", values.payment_screenshot);
+      formData.append("payment_refrence_number", values.payment_reference_id);
+
       // Submit the form data to the backend API
       const response = await fetch("/api/user/register", {
         method: "POST",
-        body: formData, // No need to set Content-Type; fetch handles it for FormData
+        body: formData,
       });
 
       if (response.ok) {
-        console.log("Registration successful");
+        // Show success message
+        toast("Registration successful", {
+          description: "Your registration has been submitted successfully.",
+          duration: 3000,
+        });
+
+        // Reload the page after a short delay to allow the user to see the success message
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } else {
-        console.error("Registration failed:", await response.text());
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: "Registration failed" }));
+        toast("Registration failed", {
+          description: errorData.error || "Please try again later",
+          duration: 5000,
+        });
+        setIsSubmitting(false);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      toast("Error", {
+        description: "An unexpected error occurred. Please try again later.",
+        duration: 5000,
+      });
+      setIsSubmitting(false);
     }
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Name Field */}
+        <FormField
+          control={form.control}
+          name="student_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Full Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your full name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {/* SAP ID Field */}
         <FormField
           control={form.control}
@@ -125,14 +172,15 @@ export function RegisterForm() {
         <FormField
           control={form.control}
           name="payment_screenshot"
-          render={({ field }) => (
+          render={({ field: { value, onChange, ...fieldProps } }) => (
             <FormItem>
               <FormLabel>Payment Screenshot</FormLabel>
               <FormControl>
                 <Input
                   type="file"
-                  accept="image/*" // Restrict to image files
-                  onChange={(e) => field.onChange(e.target.files?.[0])} // Pass the first file to the field
+                  accept="image/*"
+                  onChange={(e) => onChange(e.target.files?.[0])}
+                  {...fieldProps}
                 />
               </FormControl>
               <FormMessage />
@@ -156,12 +204,8 @@ export function RegisterForm() {
         />
 
         {/* Submit Button */}
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={form.formState.isSubmitting}
-        >
-          {form.formState.isSubmitting ? (
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Registering...

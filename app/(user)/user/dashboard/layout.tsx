@@ -2,6 +2,7 @@
 
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { UserDashboardSidebar } from "@/components/user-dashboard-sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function DashboardLayout({
   children,
@@ -16,6 +17,7 @@ export default function DashboardLayout({
           <SidebarTrigger />
           {children}
         </main>
+        <Toaster />
       </SidebarProvider>
     </div>
   );

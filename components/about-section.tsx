@@ -20,7 +20,6 @@ export default function About() {
           <OrbitingCirclesDemo />
         </div>
       </div>
-      {/* <BorderBeam size={250} duration={12} delay={9} className="rounded-lg" /> */}
     </MagicCard>
   );
 }
