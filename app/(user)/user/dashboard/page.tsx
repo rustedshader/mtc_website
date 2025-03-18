@@ -4,14 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function Dashboard() {
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getSession();
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-  if (error || !data?.user) {
+  if (error || !data?.session?.user) {
     redirect("/login");
   }
 
-  const userEmail = data.user.email ?? redirect("/login");
+  const userEmail = data.session.user.email ?? redirect("/login");
+  const { data: sessionData, error: sessionError } =
+    await supabase.auth.getSession();
+  console.log(sessionData, sessionError);
 
   // Fetch user data from the API endpoint that returns registration and verification details.
   const res = await fetch(
@@ -30,6 +33,8 @@ export default async function Dashboard() {
     return (
       <div>
         <p>This is the {userEmail} Dashboard</p>
+        <p>This is the user data:</p>
+        <pre>{JSON.stringify(data.session.user, null, 2)}</pre>
         <p>Please go to the registration tab and register.</p>
       </div>
     );

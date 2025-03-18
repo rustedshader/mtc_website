@@ -53,20 +53,12 @@ export async function POST(request: NextRequest) {
     const mtc_id = `MTCM${String((last_id?.id || 0) + 1).padStart(4, "0")}`;
     const userId = (last_id?.id || 0) + 1;
 
-    console.log(
-      student_name,
-      student_course,
-      student_course_year,
-      student_sap_id,
-      mtc_id
-    );
-
     // Create the user in the database
     const user = await prisma.registeredUsers.create({
       data: {
         id: userId,
         student_name: student_name,
-        university_sap_id: BigInt(student_sap_id),
+        university_sap_id: student_sap_id,
         university_course: student_course,
         university_course_year: student_course_year,
         mtc_id: mtc_id,
@@ -76,7 +68,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Upload the image to Supabase storage
-    const filePath = `screenshots/${mtc_id}_${payment_screenshot.name}`;
+    const filePath = `screenshots/${payment_refrence_number}`;
     const { error: uploadError } = await supabase.storage
       .from("payment_screenshots")
       .upload(filePath, payment_screenshot);
@@ -85,6 +77,10 @@ export async function POST(request: NextRequest) {
       throw uploadError;
     }
 
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("payment_screenshots").getPublicUrl(filePath);
+
     // Create the payment record, including the screenshot URL
     await prisma.payments.create({
       data: {
@@ -92,8 +88,9 @@ export async function POST(request: NextRequest) {
         mtc_id: mtc_id,
         student_name: student_name,
         university_email: student_email,
-        university_sap_id: BigInt(student_sap_id),
+        university_sap_id: student_sap_id,
         payment_refrence_number: payment_refrence_number,
+        payment_screenshot_url: publicUrl,
       },
     });
 

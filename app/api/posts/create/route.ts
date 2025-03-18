@@ -1,7 +1,9 @@
+import { createClient } from "@/utils/supabase/server";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
+const supabase = await createClient();
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,7 +13,6 @@ export async function POST(request: NextRequest) {
     // Get content from request body instead of headers
     const body = await request.json();
     const mdContent = body.mdContent;
-
     if (!title || !mdContent) {
       return NextResponse.json(
         {

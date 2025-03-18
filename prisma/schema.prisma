@@ -17,13 +17,14 @@ model Post {
 
 model RegisteredUsers {
   student_name           String?
-  university_sap_id      BigInt?
+  university_sap_id      String?
   university_course      String?
   university_course_year String?
   university_email       String?
   mtc_id                 String?
   id                     Int      @id(map: "MTC_Users_pkey") @default(autoincrement())
   is_verified            Boolean? @default(false)
+  is_admin            Boolean? @default(false)
 }
 
 model Payments {
@@ -31,6 +32,8 @@ model Payments {
   mtc_id                 String?
   student_name           String?
   university_email       String?
-  university_sap_id      BigInt?
+  university_sap_id      String?
   payment_refrence_number String?
+  payment_screenshot_url String?
+  payment_verified       Boolean? @default(false)
 }

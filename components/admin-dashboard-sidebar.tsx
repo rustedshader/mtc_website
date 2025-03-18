@@ -9,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { LogoutButton } from "./logout-button";
 
 const items = [
   {
@@ -18,7 +19,7 @@ const items = [
   },
   {
     title: "All Posts",
-    url: "/admin/dashboard/posts",
+    url: "/admin/dashboard/all-posts",
     icon: Notebook,
   },
   {
@@ -30,6 +31,19 @@ const items = [
     title: "Registered Users",
     url: "/admin/dashboard/registered-users",
     icon: Users,
+  },
+  {
+    title: "Payment Pending Users",
+    url: "/admin/dashboard/payment-pending-users",
+    icon: Users,
+  },
+  {
+    title: "Verify Payment",
+    url: "/admin/dashboard/verify-payment",
+    icon: Users,
+  },
+  {
+    icon: LogoutButton,
   },
 ];
 

@@ -10,8 +10,8 @@ export function MainNav() {
         <Link href="/team">Our Team</Link>
         <Link href="/gallery">Memories</Link>
         <Link href="/contact">Contact Us</Link>
-        <Link href="/login">Login</Link>
-        <Link href="/signup">Join !</Link>
+        <Link href="/login">Sign In</Link>
+        <Link href="/signup">Join Us</Link>
       </nav>
     </div>
   );
