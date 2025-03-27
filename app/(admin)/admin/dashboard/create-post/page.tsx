@@ -1,49 +1,39 @@
-"use client"; // Mark this as a Client Component
+// "use client";
+// app/create-post/page.tsx
+// Server Component (no "use client")
 
-import { useState } from "react";
 import MarkdownComponent from "@/components/markdown-component";
+import { createPost } from "@/lib/frontendApiFunctions";
+import { redirect } from "next/navigation";
 
-const CreatePostForm = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export default function CreatePostForm() {
+  // Server Action for form submission
+  async function handleFormSubmit(formData: FormData) {
+    "use server"; // Marks this as a server action
 
-  const handleCreatePost = async (title: string, content: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const url = `/api/posts/create?title=${encodeURIComponent(title)}`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ mdContent: content }),
-      });
+    const title = formData.get("title") as string;
+    const content = formData.get("content") as string;
 
-      if (!response.ok) {
-        throw new Error(`Failed to create post (${response.status})`);
-      }
-
-      const data = await response.json();
-      // Optionally, redirect or show success message here
-      return data;
-    } catch (error) {
-      console.error("API call error:", error);
-      setError(error instanceof Error ? error.message : "An error occurred");
-      throw error;
-    } finally {
-      setLoading(false);
+    if (!title?.trim() || !content?.trim()) {
+      throw new Error("Title and content are required");
     }
-  };
+
+    try {
+      const result = await createPost(title, content);
+      console.log("Post created:", result);
+      redirect("/posts"); // Redirect on success (adjust path)
+    } catch (error) {
+      throw new Error(`Failed to create post: ${(error as Error).message}`);
+    }
+  }
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
       <h1 className="text-2xl font-bold mb-6">Create New Post</h1>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <MarkdownComponent onSubmit={handleCreatePost} />
-      {loading && <p>Loading...</p>}
+      <form action={handleFormSubmit}>
+        {/* Pass no onSubmit prop, rely on form action */}
+        <MarkdownComponent />
+      </form>
     </div>
   );
-};
-
-export default CreatePostForm;
+}

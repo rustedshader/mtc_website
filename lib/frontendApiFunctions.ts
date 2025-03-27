@@ -48,3 +48,28 @@ export async function getPaymentPendingUsers() {
     return [];
   }
 }
+
+export async function createPost(title: string, content: string) {
+  try {
+    const url = `http://localhost:3000/api/posts/create?title=${encodeURIComponent(
+      title
+    )}`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ mdContent: content }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to create post (${response.status})`);
+    }
+
+    const data: PostCreated = await response.json();
+    return data;
+  } catch (error) {
+    console.error("API call error:", error);
+    throw error;
+  }
+}

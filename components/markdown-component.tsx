@@ -1,4 +1,5 @@
-"use client";
+// components/markdown-component.tsx
+"use client"; // Client Component
 
 import React, { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
@@ -14,22 +15,14 @@ import {
 } from "./ui/card";
 import { Label } from "./ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { AlertCircle, CheckCircle, FileText, Eye } from "lucide-react";
+import { AlertCircle, CheckCircle, FileText } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 
-interface MarkdownComponentProps {
-  onSubmit: (title: string, content: string) => Promise<void>;
-  initialTitle?: string;
-  initialContent?: string;
-  submitLabel?: string;
-}
-
 export default function MarkdownComponent({
-  onSubmit,
   initialTitle = "",
   initialContent = "",
   submitLabel = "Create Post",
-}: MarkdownComponentProps) {
+}) {
   const [value, setValue] = useState<string>(initialContent);
   const [title, setTitle] = useState<string>(initialTitle);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -44,7 +37,9 @@ export default function MarkdownComponent({
     setTitle(e.target.value);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent default if needed, but form action will handle submission
+
     if (!title.trim()) {
       setMessage("Please enter a title for your post");
       return;
@@ -54,25 +49,9 @@ export default function MarkdownComponent({
       return;
     }
 
-    try {
-      setIsSubmitting(true);
-      setMessage("");
-      // Pass the data to the parent component
-      await onSubmit(title, value);
-      // On success
-      setMessage("Post saved successfully!");
-
-      // Reset form if it's a new post (no initial values)
-      if (!initialTitle && !initialContent) {
-        setTitle("");
-        setValue("");
-      }
-    } catch (error) {
-      setMessage(`Error: ${(error as Error).message || "Failed to save post"}`);
-      console.error("Submit error:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Form submission is handled by the server action, so no need to call onSubmit here
+    setIsSubmitting(true);
+    setMessage("");
   };
 
   return (
@@ -93,6 +72,7 @@ export default function MarkdownComponent({
           <Input
             type="text"
             id="title"
+            name="title" // Required for FormData
             value={title}
             onChange={handleTitleChange}
             placeholder="Enter an engaging title for your post"
@@ -125,14 +105,14 @@ export default function MarkdownComponent({
               value="preview"
               className="border rounded-md p-4 min-h-64 prose max-w-none dark:prose-invert"
             >
-              <div className="preview-container">
-                <MDEditor.Markdown
-                  source={value}
-                  style={{ whiteSpace: "pre-wrap" }}
-                />
-              </div>
+              <MDEditor.Markdown
+                source={value}
+                style={{ whiteSpace: "pre-wrap" }}
+              />
             </TabsContent>
           </Tabs>
+          {/* Hidden input to pass content to FormData */}
+          <input type="hidden" name="content" value={value} />
         </div>
 
         {message && (
@@ -153,6 +133,7 @@ export default function MarkdownComponent({
       </CardContent>
       <CardFooter>
         <Button
+          type="submit" // Native form submission
           onClick={handleSubmit}
           disabled={isSubmitting}
           className="w-full"

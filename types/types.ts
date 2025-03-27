@@ -35,3 +35,7 @@ interface Post {
   content: string;
   is_published: boolean;
 }
+
+interface PostCreated {
+  data: string;
+}
