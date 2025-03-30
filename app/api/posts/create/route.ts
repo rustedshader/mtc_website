@@ -5,16 +5,13 @@ const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const title = searchParams.get("title");
-
-    // Get content from request body instead of headers
     const body = await request.json();
-    const mdContent = body.mdContent;
-    if (!title || !mdContent) {
+    const { title, content } = body;
+
+    if (!title || !content) {
       return NextResponse.json(
         {
-          error: "Missing title or content",
+          error: "Missing required fields: title and content",
         },
         {
           status: 400,
@@ -22,17 +19,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await prisma.post.create({
+    // Validate title length
+    if (title.length > 255) {
+      return NextResponse.json(
+        {
+          error: "Title must be less than 255 characters",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const post = await prisma.post.create({
       data: {
-        title: title,
-        content: mdContent,
+        title: title.trim(),
+        content: content,
         published: false,
       },
     });
 
     return NextResponse.json(
       {
-        data: "Post created",
+        data: post,
+        message: "Post created successfully",
       },
       {
         status: 201,
@@ -42,7 +52,7 @@ export async function POST(request: NextRequest) {
     console.error("API error:", error);
     return NextResponse.json(
       {
-        error: "Failed to create post",
+        error: "Failed to create post. Please try again later.",
       },
       {
         status: 500,

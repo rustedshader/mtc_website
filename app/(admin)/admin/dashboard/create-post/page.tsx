@@ -1,39 +1,39 @@
-// "use client";
+"use client";
 // app/create-post/page.tsx
 // Server Component (no "use client")
 
 import MarkdownComponent from "@/components/markdown-component";
 import { createPost } from "@/lib/frontendApiFunctions";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function CreatePostForm() {
-  // Server Action for form submission
-  async function handleFormSubmit(formData: FormData) {
-    "use server"; // Marks this as a server action
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
-    const title = formData.get("title") as string;
-    const content = formData.get("content") as string;
-
-    if (!title?.trim() || !content?.trim()) {
-      throw new Error("Title and content are required");
-    }
-
+  const handleSubmit = async (data: { title: string; content: string }) => {
     try {
-      const result = await createPost(title, content);
+      setError(null);
+      const result = await createPost(data.title, data.content);
       console.log("Post created:", result);
-      redirect("/posts"); // Redirect on success (adjust path)
+      router.push("/admin/dashboard/all-posts"); // Updated redirect path
     } catch (error) {
-      throw new Error(`Failed to create post: ${(error as Error).message}`);
+      setError(
+        error instanceof Error ? error.message : "Failed to create post"
+      );
+      throw error; // Re-throw to let the component handle the error state
     }
-  }
+  };
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
       <h1 className="text-2xl font-bold mb-6">Create New Post</h1>
-      <form action={handleFormSubmit}>
-        {/* Pass no onSubmit prop, rely on form action */}
-        <MarkdownComponent />
-      </form>
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-md">
+          {error}
+        </div>
+      )}
+      <MarkdownComponent submitLabel="Create Post" onSubmit={handleSubmit} />
     </div>
   );
 }

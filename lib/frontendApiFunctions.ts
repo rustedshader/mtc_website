@@ -51,19 +51,19 @@ export async function getPaymentPendingUsers() {
 
 export async function createPost(title: string, content: string) {
   try {
-    const url = `http://localhost:3000/api/posts/create?title=${encodeURIComponent(
-      title
-    )}`;
-    const response = await fetch(url, {
+    const response = await fetch("http://localhost:3000/api/posts/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ mdContent: content }),
+      body: JSON.stringify({ title, content }),
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to create post (${response.status})`);
+      const error = await response.json();
+      throw new Error(
+        error.error || `Failed to create post (${response.status})`
+      );
     }
 
     const data: PostCreated = await response.json();
