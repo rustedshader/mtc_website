@@ -8,7 +8,22 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const EventsCarousel: React.FC<{ blogs: BlogPost[] }> = ({ blogs }) => {
+interface Blog {
+  id: string;
+  title: string;
+  description: string | null;
+  image: string | null;
+  date: string;
+  slug: string;
+  location: string;
+  type: string;
+}
+
+interface EventsCarouselProps {
+  blogs: Blog[];
+}
+
+const EventsCarousel: React.FC<EventsCarouselProps> = ({ blogs }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -63,37 +78,53 @@ const EventsCarousel: React.FC<{ blogs: BlogPost[] }> = ({ blogs }) => {
             <MagicCard className="opacity-95 w-full rounded-lg sm:rounded-[20px] transition-all duration-300">
               <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-6">
                 <div className="flex-1 text-center sm:text-left">
-                  <h2 className="text-2xl sm:text-4xl font-bold text-white mb-2">
-                    {blogs[currentIndex].frontMatter.title}
-                  </h2>
-                  <p className="text-xs sm:text-sm text-gray-300 mb-2">
-                    {blogs[currentIndex].frontMatter.date}
-                  </p>
-                  <p className="text-sm sm:text-base text-gray-100 mb-4">
-                    {blogs[currentIndex].frontMatter.description.length > 150
-                      ? `${blogs[currentIndex].frontMatter.description.slice(
-                          0,
-                          150
-                        )}...`
-                      : blogs[currentIndex].frontMatter.description}
-                  </p>
-                  <Button className="bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all duration-200">
-                    <Link
-                      href={`/events/${blogs[currentIndex].slug}`}
-                      className="flex items-center gap-2"
-                    >
-                      View Event
-                    </Link>
-                  </Button>
+                  {blogs.length > 0 ? (
+                    <>
+                      <h2 className="text-2xl sm:text-4xl font-bold text-white mb-2">
+                        {blogs[currentIndex].title}
+                      </h2>
+                      <p className="text-xs sm:text-sm text-gray-300 mb-2">
+                        {blogs[currentIndex].date}
+                      </p>
+                      <p className="text-xs sm:text-sm text-gray-300 mb-2">
+                        {blogs[currentIndex].location}
+                      </p>
+                      <p className="text-xs sm:text-sm text-gray-300 mb-2">
+                        {blogs[currentIndex].type}
+                      </p>
+                      <p className="text-xs sm:text-sm text-gray-300 mb-2">
+                        {blogs[currentIndex].description}
+                      </p>
+                      <Button className="bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all duration-200">
+                        <Link
+                          href={`/events/${blogs[currentIndex].id}`}
+                          className="flex items-center gap-2"
+                        >
+                          View Event
+                        </Link>
+                      </Button>
+                    </>
+                  ) : (
+                    <div className="text-center">
+                      <h2 className="text-2xl sm:text-4xl font-bold text-white mb-2">
+                        No Events Available
+                      </h2>
+                      <p className="text-xs sm:text-sm text-gray-300 mb-2">
+                        Check back later for upcoming events!
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <div className="w-full sm:w-auto flex-shrink-0">
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/events/${blogs[currentIndex].frontMatter.thumbnail}`}
-                    alt={blogs[currentIndex].frontMatter.title}
-                    width={500}
-                    height={500}
-                    className="rounded-lg object-cover w-full h-48 sm:h-[500px] sm:w-[500px]"
-                  />
+                  {blogs.length > 0 && blogs[currentIndex].image && (
+                    <Image
+                      src={`${blogs[currentIndex].image}`}
+                      alt={blogs[currentIndex].title}
+                      width={500}
+                      height={500}
+                      className="rounded-lg object-cover w-full h-48 sm:h-[500px] sm:w-[500px]"
+                    />
+                  )}
                 </div>
               </div>
             </MagicCard>

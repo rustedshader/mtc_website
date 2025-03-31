@@ -4,7 +4,6 @@ import { siteConfig } from "@/config/site";
 import SparklesText from "@/components/ui/sparkles-text";
 import { BorderBeam } from "@/components/ui/border-beam";
 import EventsCarousel from "@/components/events-card";
-import { getAllSerializedMdFilesInDir } from "@/lib/fileUtils";
 import Link from "next/link";
 import About from "@/components/about-section";
 
@@ -19,8 +18,24 @@ import About from "@/components/about-section";
 // TODO Improve Landing Page
 
 export default async function Home() {
-  const events_dir: string = "events"; //TODO Add it to config
-  const blogs: BlogPost[] = await getAllSerializedMdFilesInDir(events_dir);
+  let events = [];
+  let error = null;
+
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const response = await fetch(`${baseUrl}/api/events`, {
+      next: { revalidate: 60 }, // Revalidate every minute
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch events");
+    }
+
+    events = await response.json();
+  } catch (err) {
+    console.error("Error fetching events:", err);
+    error = "Unable to load events at this time. Please try again later.";
+  }
 
   return (
     <>
@@ -86,7 +101,17 @@ export default async function Home() {
               className="text-3xl sm:text-4xl lg:text-5xl text-center"
               text="Past Events"
             />
-            {blogs && <EventsCarousel blogs={blogs} />}
+            {error ? (
+              <div className="text-center py-8">
+                <p className="text-red-400 mb-4">{error}</p>
+                <p className="text-gray-400">
+                  We're experiencing some technical difficulties. Please check
+                  back soon.
+                </p>
+              </div>
+            ) : (
+              <EventsCarousel blogs={events} />
+            )}
           </div>
         </section>
       </div>

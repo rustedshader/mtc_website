@@ -1,4 +1,10 @@
-import { Home, Notebook, NotebookPen, Users } from "lucide-react";
+import {
+  Home,
+  Notebook,
+  NotebookPen,
+  Users,
+  MessageSquare,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -41,6 +47,11 @@ const items = [
     title: "Verify Payment",
     url: "/admin/dashboard/verify-payment",
     icon: Users,
+  },
+  {
+    title: "Contact Messages",
+    url: "/admin/dashboard/contacts",
+    icon: MessageSquare,
   },
   {
     icon: LogoutButton,
