@@ -4,10 +4,9 @@ import TeamCard from "../TeamCard/TeamCard";
 
 const facultyCoordinators = [
   {
-    name: "Ram Kumar",
-    image: "/team_img/Dr Ram Kumar PP Latest.png",
-    linkedinID:
-      "#",
+    name: "Richa Kumari",
+    image: "/team_img/richa_kumari.jpg",
+    linkedinID: "https://www.linkedin.com/in/richa-kumari-3835b0293/",
   },
   {
     name: "Keshav Sinha",
@@ -17,38 +16,54 @@ const facultyCoordinators = [
   },
 ];
 
-
-const StudentCoordinator = [
+const Management = [
   {
-    name: "Aditya Kumar",
-    image: "/team_img/aditya.png",
-    linkedinID: "https://www.linkedin.com/in/aditya-kumar-220053208/",
+    name: "Vedanshi Samant",
+    position: "President",
+    image: "/team_img/Vedanshi.JPG",
+    linkedinID: "https://www.linkedin.com/in/vedanshi-samant-709879278/",
   },
   {
-    name: "Sanidhya Soni",
-    image: "/team_img/sanidhya soni.png",
-    linkedinID: "https://www.linkedin.com/in/sanidhya-soni/",
-  },
-  {
-    name: "Yash Raj Singh",
-    image: "/team_img/y1.png",
-    linkedinID: "https://www.linkedin.com/in/yash-raj-singh-yrs/",
-  },
-  {
-    name: "Rishabh Dhangar",
-    image: "/team_img/rishabh.png",
-    linkedinID: "https://www.linkedin.com/in/rishabh-dhangar/",
-  },
-  {
-    name: "Tanish Garg",
-    image: "/team_img/tanish.JPG",
+    name: "Hardik Raj Kappor",
+    position: "Vice President",
+    image: "/team_img/Hardik.png",
     linkedinID:
-      "https://www.linkedin.com/in/tanish-garg-5114aa236?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+      "https://www.linkedin.com/in/hardik-raj-kapoor-03a680183?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+  },
+  {
+    name: "Anish Kothiyal",
+    position: "Treasurer",
+    image: "/team_img/Anish.jpg",
+    linkedinID: "https://www.upesmtc.com/ ",
+  },
+  {
+    name: "Vansh Raj Chauhan",
+    position: "Director Of Operations",
+    image: "/team_img/Vansh_Raj_Chauhan.jpg",
+    linkedinID: "https://www.linkedin.com/in/vansh-raj-chauhan-64b50a258/",
+  },
+  {
+    name: "Sanya Sinha",
+    position: "Managerial Director",
+    image: "/team_img/Sanya_Sinha.jpg",
+    linkedinID:
+      "https://www.linkedin.com/in/sanya-sinha-a859ab244?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+  },
+  {
+    name: "Akshita Aggarwal",
+    position: "Internal Operations Head",
+    image: "/team_img/akshita_aggarwal.jpeg",
+    linkedinID: "https://www.linkedin.com/in/akshita-aggarwal-381576284/",
+  },
+  {
+    name: "Pallavi Singh",
+    position: "Joint Secretary",
+    image: "/team_img/pallavi_singh.jpeg",
+    linkedinID: "https://www.linkedin.com/in/pallavi-singh-06b465286/",
   },
 ];
 
-
-const Management = [
+const StudentCoordinator = [
   {
     name: "Vibhor Minocha",
     position: "President",
@@ -84,126 +99,93 @@ const Management = [
 
 const Advisor = [
   {
-    name: "Hamzaa Bin Saleem",
-    position: "Event Head Advisor",
-    image: "/team_img/hamza.jpeg",
-    linkedinID: "https://www.linkedin.com/in/hamza-bin-saleem-b80917241/",
+    name: "Samriddh Sharma",
+    position: "Management and Records Advisory",
+    image: "/team_img/samriddh_sharma.jpeg",
+    linkedinID:
+      "https://www.linkedin.com/in/samriddh-sharma-754565258/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
   {
-    name: "Insiya Rizvi",
-    position: "Management & Records Advisor",
-    image: "/team_img/Insiya.JPG",
-    linkedinID: "https://www.linkedin.com/in/insiya-rizvi-118702178/",
-  },
-  {
-    name: "Shresth Pandey",
-    position: "Public Relation Advisor",
-    image: "/team_img/Shresth_Pandey.png",
-    linkedinID: "https://www.linkedin.com/in/shresth-pandey-488b10229/",
+    name: "Chetanya Jain Jain",
+    position: "Public Relations Advisory",
+    image: "/team_img/chetanya.JPG",
+    linkedinID: "https://www.linkedin.com/in/chetanya-jain-838016210/",
   },
 ];
 
 const WorkingTeam = [
   {
-    name: "Hardik Raj Kappor",
-    position: "Internal Operation Head ",
-    image: "/team_img/Hardik.png",
+    name: "Divya Darshan Tiwari",
+    position: "Management and Records Head",
+    image: "/team_img/divya_darshan_tiwari.jpeg",
+    linkedinID: "https://www.linkedin.com/in/divya-darshan-tiwari-9b6981240",
+  },
+  {
+    name: "Kashish Turan",
+    position: "Management and Records Associate Head",
+    image: "/team_img/kashish_turan.jpeg",
+    linkedinID: "https://www.linkedin.com/in/kashish-turan-b95b6626b/",
+  },
+  {
+    name: "Kanhaiya Sethi",
+    position: "Events Head",
+    image: "/team_img/kanhaiya_sethi.jpeg",
     linkedinID:
-      "https://www.linkedin.com/in/hardik-raj-kapoor-03a680183?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      "https://www.linkedin.com/in/kanhaiya-sethi-0a0864270?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
   {
-    name: "Vedanshi Samant",
-    position: "Joint-Secrectry",
-    image: "/team_img/Vedanshi.JPG",
-    linkedinID: "https://www.linkedin.com/in/vedanshi-samant-709879278/",
+    name: "Vibhav Khaneja",
+    position: "Public Relations Head",
+    image: "/team_img/vibhav_khaneja.jpeg",
+    linkedinID: "https://www.linkedin.com/in/vibhav-khaneja-863552256/",
   },
   {
-    name: "Priyanshu Butola ",
-    position: "Technical Head",
-    image: "/team_img/priyanshu.jpg",
-    linkedinID:
-      "https://www.linkedin.com/in/priyanshu-butola?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    name: "Devansh Gaur",
+    position: "Social Media Head",
+    image: "/team_img/devansh_gaur.jpeg",
+    linkedinID: "https://www.linkedin.com/in/devanshgaur7/",
   },
   {
-    name: "Vansh Raj Chauhan",
-    position: "Technical Head",
-    image: "/team_img/Vansh_Raj_Chauhan.jpg",
-    linkedinID: "https://www.linkedin.com/in/vansh-raj-chauhan-64b50a258/",
-  },
-  {
-    name: "Shambhavee Srivastav",
-    position: "Technical Associate Head",
-    image: "/team_img/Shambhavee_Srivastava.jpg",
-    linkedinID: "https://www.linkedin.com/in/shambhavee-srivastava-973494278/",
-  },
-  {
-    name: "Kanishka Tomar",
-    position: "Technical Associate Head",
-    image: "/team_img/kanishka2.jpeg",
-    linkedinID: "https://www.linkedin.com/in/kanishka-tomar-645174257/",
-  },
-
-
-  {
-    name: "Sanya Sinha",
-    position: "Design Head",
-    image: "/team_img/Sanya_Sinha.jpg",
-    linkedinID:
-      "https://www.linkedin.com/in/sanya-sinha-a859ab244?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
-  {
-    name: "Anish Kothiyal",
-    position: "Design Associate Head",
-    image: "/team_img/Anish.jpg",
-    linkedinID: "https://www.upesmtc.com/ ",
-  },
-  {
-    name: "Samriddh Sharma",
-    position: "Management and Record Head",
-    image: "/team_img/Samridhh.jpeg",
-    linkedinID:
-      "https://www.linkedin.com/in/samriddh-sharma-754565258/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
-  {
-    name: "Yashpal Singh",
-    position: "Management and Record Associate Head",
-    image: "/team_img/yashpal.JPG",
-    linkedinID:
-      "https://www.linkedin.com/in/yashpal-singh-230072262?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
-  {
-    name: "Isha Yadav",
-    position: "Management and Record Associate Head",
-    image: "/team_img/Isha_Yadav.jpg",
-    linkedinID:
-      " https://www.linkedin.com/in/isha-yadav-4ab73a2a7?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
-  {
-    name: "Swati pal ",
+    name: "Priyanshi",
     position: "Editorial Head",
-    image: "/team_img/swati_Pal.jpg",
-    linkedinID: "http://www.linkedin.com/in/swati-pal-upes",
+    image: "/team_img/priyanshi.jpeg",
+    linkedinID: "https://www.linkedin.com/in/priyanshi-99a067272/",
   },
-
   {
-    name: "Kunal Sharma ",
+    name: "Kunal Shubh Sharma",
     position: "Editorial Associate Head",
     image: "/team_img/Kunal_Sharma.jpg",
-    linkedinID:
-      "https://www.linkedin.com/in/kunal-shubh-sharma-6303a72a7?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    linkedinID: "https://www.linkedin.com/in/kunal-shubh-sharma-6303a72a7/",
   },
   {
-    name: "Chaitanya ",
-    position: "Public Relation Head ",
-    image: "/team_img/chetanya.JPG",
-    linkedinID: "https://www.linkedin.com/in/chetanya-jain-838016210/",
+    name: "Taraksh Goyal",
+    position: "Technical Associate Head",
+    image: "/team_img/tarraksh_goyal.jpeg",
+    linkedinID: "https://www.linkedin.com/in/taraksh-goyal-86375831b/",
   },
-
   {
-    name: "Saarthak Gupta",
-    position: "Public Relation Associate Head ",
-    image: "/team_img/Sarthak3.png",
-    linkedinID: "https://www.linkedin.com/in/saarthak-gupta-11677b268?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    name: "Shubhang Sharma",
+    position: "Technical Associate Head",
+    image: "/team_img/shubhang_sharma.jpeg",
+    linkedinID: "https://www.linkedin.com/in/shubhang-sharma-40871a31b/",
+  },
+  {
+    name: "Sarthak Jakhmola",
+    position: "Design Head",
+    image: "/team_img/sarthak_jakhmola.jpeg",
+    linkedinID: "https://www.linkedin.com/in/sarthak-jakhmola-340049287/",
+  },
+  {
+    name: "Saksham Joshi",
+    postion: "Design Associate Head",
+    image: "/team_img/saksham_joshi.jpeg",
+    linkedinID: "https://www.linkedin.com/in/saksham-joshi-144476235/",
+  },
+  {
+    name: "Shrey Sharma",
+    position: "External PR Head",
+    image: "/team_img/shrey_sharma.jpeg",
+    linkedinID: "https://www.linkedin.com/in/shrey-sharma-34237024b/",
   },
 ];
 
@@ -225,6 +207,32 @@ const Alumni = [
     image: "/team_img/Vishal1.webp",
     linkedinID:
       "https://www.linkedin.com/in/vishal-gupta-6b6123194?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+  },
+  {
+    name: "Aditya Kumar",
+    image: "/team_img/aditya.png",
+    linkedinID: "https://www.linkedin.com/in/aditya-kumar-220053208/",
+  },
+  {
+    name: "Sanidhya Soni",
+    image: "/team_img/sanidhya soni.png",
+    linkedinID: "https://www.linkedin.com/in/sanidhya-soni/",
+  },
+  {
+    name: "Yash Raj Singh",
+    image: "/team_img/y1.png",
+    linkedinID: "https://www.linkedin.com/in/yash-raj-singh-yrs/",
+  },
+  {
+    name: "Rishabh Dhangar",
+    image: "/team_img/rishabh.png",
+    linkedinID: "https://www.linkedin.com/in/rishabh-dhangar/",
+  },
+  {
+    name: "Tanish Garg",
+    image: "/team_img/tanish.JPG",
+    linkedinID:
+      "https://www.linkedin.com/in/tanish-garg-5114aa236?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
   },
 ];
 
@@ -254,15 +262,15 @@ function Team() {
 
             <h2>Our Student Coordinator</h2>
 
-<div className="wrapper-div">
-  {StudentCoordinator.map((sc) => (
-    <TeamCard
-      name={sc.name}
-      image={sc.image}
-      linkedinID={sc.linkedinID}
-    />
-  ))}
-</div>
+            <div className="wrapper-div">
+              {StudentCoordinator.map((sc) => (
+                <TeamCard
+                  name={sc.name}
+                  image={sc.image}
+                  linkedinID={sc.linkedinID}
+                />
+              ))}
+            </div>
 
             <h2>Management Team</h2>
 
@@ -302,8 +310,6 @@ function Team() {
                 />
               ))}
             </div>
-
-         
 
             <h2>Our Alumni</h2>
 
