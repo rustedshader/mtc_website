@@ -49,18 +49,6 @@ const Management = [
     linkedinID:
       "https://www.linkedin.com/in/sanya-sinha-a859ab244?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
-  {
-    name: "Akshita Aggarwal",
-    position: "Internal Operations Head",
-    image: "/team_img/akshita_aggarwal.jpeg",
-    linkedinID: "https://www.linkedin.com/in/akshita-aggarwal-381576284/",
-  },
-  {
-    name: "Pallavi Singh",
-    position: "Joint Secretary",
-    image: "/team_img/pallavi_singh.jpeg",
-    linkedinID: "https://www.linkedin.com/in/pallavi-singh-06b465286/",
-  },
 ];
 
 const StudentCoordinator = [
@@ -114,6 +102,18 @@ const Advisor = [
 ];
 
 const WorkingTeam = [
+  {
+    name: "Akshita Aggarwal",
+    position: "Internal Operations Head",
+    image: "/team_img/akshita_aggarwal.jpeg",
+    linkedinID: "https://www.linkedin.com/in/akshita-aggarwal-381576284/",
+  },
+  {
+    name: "Pallavi Singh",
+    position: "Joint Secretary",
+    image: "/team_img/pallavi_singh.jpeg",
+    linkedinID: "https://www.linkedin.com/in/pallavi-singh-06b465286/",
+  },
   {
     name: "Divya Darshan Tiwari",
     position: "Management and Records Head",
