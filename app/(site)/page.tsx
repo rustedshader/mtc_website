@@ -74,10 +74,7 @@ export default async function Home() {
           playsInline
           className="absolute w-full h-full object-cover"
         >
-          <source
-            src={`${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/assests/hero_background_video.mp4`}
-            type="video/mp4"
-          />
+          <source src={`/hero_background_video.mp4`} type="video/mp4" />
         </video>
       </section>
 
