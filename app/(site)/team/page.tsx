@@ -39,7 +39,7 @@ export default function Team() {
                     >
                       <div className="flex flex-col items-center space-y-6">
                         <Image
-                          src={`${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/team/${user.image}`}
+                          src={`/team/${user.image}`}
                           alt={user.name}
                           width={200}
                           height={200}
