@@ -16,14 +16,44 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Users, ArrowRight } from "lucide-react";
+import { Search, Users, ArrowRight, Image } from "lucide-react";
 import Link from "next/link";
+import { PrismaClient } from "@prisma/client";
+import { stackServerApp } from "@/stack";
+
+const prisma = new PrismaClient();
 
 export default async function VerifyPayment() {
-  const payment_not_verfied_users = await fetch(
-    "http://localhost:3000/api/user/get-payment-not-verified-users"
-  );
-  const payment_pending_users_json = await payment_not_verfied_users.json();
+  // Ensure admin access
+  const user = await stackServerApp.getUser({ or: "redirect" });
+  const userData = await prisma.registeredUsers.findUnique({
+    where: { id: user.id },
+  });
+
+  if (!userData || userData.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  // Get payments that need verification
+  const payment_pending_users = await prisma.registeredUsers.findMany({
+    include: {
+      payments: {
+        where: {
+          payment_verified: false,
+        },
+      },
+    },
+    where: {
+      payments: {
+        some: {
+          payment_verified: false,
+        },
+      },
+    },
+    orderBy: {
+      created_at: "desc",
+    },
+  });
 
   return (
     <div className="container mx-auto py-8">
@@ -35,7 +65,7 @@ export default async function VerifyPayment() {
               <CardTitle className="text-2xl">Verify Payments</CardTitle>
             </div>
             <Badge variant="outline">
-              {payment_pending_users_json.length} Pending
+              {payment_pending_users.length} Pending
             </Badge>
           </div>
           <CardDescription>
@@ -47,7 +77,6 @@ export default async function VerifyPayment() {
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input placeholder="Search payments..." className="pl-8" />
             </div>
-            <Button variant="outline">Export CSV</Button>
           </div>
         </CardHeader>
 
@@ -65,14 +94,16 @@ export default async function VerifyPayment() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {payment_pending_users_json.map((payment: any) => (
-                  <TableRow key={payment.id}>
+                {payment_pending_users.map((user) => (
+                  <TableRow key={user.id}>
                     <TableCell className="font-medium">
-                      {payment.student_name}
+                      {user.name || "N/A"}
                     </TableCell>
-                    <TableCell>{payment.mtc_id}</TableCell>
-                    <TableCell>{payment.university_email}</TableCell>
-                    <TableCell>{payment.payment_refrence_number}</TableCell>
+                    <TableCell>{user.mtc_id || "N/A"}</TableCell>
+                    <TableCell>{user.university_email}</TableCell>
+                    <TableCell>
+                      {user.payments[0]?.payment_refrence_number || "N/A"}
+                    </TableCell>
                     <TableCell>
                       <Badge
                         variant="outline"
@@ -81,10 +112,22 @@ export default async function VerifyPayment() {
                         Pending Verification
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="space-x-2">
+                      {user.payments[0]?.payment_screenshot_url && (
+                        <Button variant="outline" size="sm" asChild>
+                          <a
+                            href={user.payments[0].payment_screenshot_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Image className="h-4 w-4 mr-2" />
+                            View Screenshot
+                          </a>
+                        </Button>
+                      )}
                       <Button variant="ghost" size="sm" asChild>
                         <Link
-                          href={`/admin/dashboard/verify-payment/${payment.mtc_id}`}
+                          href={`/admin/dashboard/verify-payment/${user.payments[0]?.id}`}
                         >
                           <ArrowRight className="h-4 w-4 mr-2" />
                           Review
@@ -97,7 +140,7 @@ export default async function VerifyPayment() {
             </Table>
           </div>
 
-          {payment_pending_users_json.length === 0 && (
+          {payment_pending_users.length === 0 && (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
                 No pending payments to verify.

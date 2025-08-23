@@ -125,7 +125,6 @@ export default function AllPosts() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button variant="outline">Export CSV</Button>
           </div>
         </CardHeader>
 

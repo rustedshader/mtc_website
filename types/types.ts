@@ -19,14 +19,23 @@ interface userData {}
 
 interface User {
   id: string;
-  student_name: string;
-  mtc_id: string;
-  university_email: string;
-  university_sap_id: string;
-  university_course: string;
-  university_course_year: string;
-  is_verified: boolean;
-  is_admin: boolean;
+  name: string | null;
+  mtc_id: string | null;
+  university_email: string | null;
+  university_sap_id: string | null;
+  university_course: string | null;
+  university_course_year: string | null;
+  role: "USER" | "ADMIN";
+  created_at: Date;
+  payments?: Payment[];
+}
+
+interface Payment {
+  id: number;
+  user_id: string;
+  payment_refrence_number: string | null;
+  payment_screenshot_url: string | null;
+  payment_verified: boolean;
 }
 
 interface Post {

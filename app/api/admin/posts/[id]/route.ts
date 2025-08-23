@@ -1,15 +1,29 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { stackServerApp } from "@/stack";
 
 const prisma = new PrismaClient();
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const resolvedParams = await params;
-    const postId = parseInt(resolvedParams.id);
+    // Verify admin access
+    const user = await stackServerApp.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userData = await prisma.registeredUsers.findUnique({
+      where: { id: user.id },
+    });
+
+    if (!userData || userData.role !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    const postId = parseInt(params.id);
 
     if (isNaN(postId)) {
       return NextResponse.json({ error: "Invalid post ID" }, { status: 400 });

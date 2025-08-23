@@ -17,10 +17,31 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, Search, Users } from "lucide-react";
-import { getRegisteredUsers } from "@/lib/frontendApiFunctions";
+import { PrismaClient } from "@prisma/client";
+import { stackServerApp } from "@/stack";
+
+const prisma = new PrismaClient();
 
 export default async function RegisteredUsers() {
-  const registered_users_data = await getRegisteredUsers();
+  // Ensure admin access
+  const user = await stackServerApp.getUser({ or: "redirect" });
+  const userData = await prisma.registeredUsers.findUnique({
+    where: { id: user.id },
+  });
+
+  if (!userData || userData.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  // Get all registered users with their payments
+  const registered_users_data = await prisma.registeredUsers.findMany({
+    include: {
+      payments: true,
+    },
+    orderBy: {
+      created_at: "desc",
+    },
+  });
 
   return (
     <div className="container mx-auto py-8">
@@ -45,7 +66,6 @@ export default async function RegisteredUsers() {
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input placeholder="Search users..." className="pl-8" />
             </div>
-            <Button variant="outline">Export CSV</Button>
           </div>
         </CardHeader>
 
@@ -68,33 +88,36 @@ export default async function RegisteredUsers() {
                 {registered_users_data.map((user) => (
                   <TableRow key={user.id}>
                     <TableCell className="font-medium">
-                      {user.student_name}
+                      {user.name || "N/A"}
                     </TableCell>
-                    <TableCell>{user.mtc_id}</TableCell>
+                    <TableCell>{user.mtc_id || "N/A"}</TableCell>
                     <TableCell>{user.university_email}</TableCell>
                     <TableCell>{user.university_sap_id}</TableCell>
                     <TableCell>{user.university_course}</TableCell>
                     <TableCell>{user.university_course_year}</TableCell>
                     <TableCell>
-                      {user.is_verified ? (
+                      {user.payments.length > 0 &&
+                      user.payments[0].payment_verified ? (
                         <Badge className="bg-green-100 text-green-800 hover:bg-green-200 flex items-center gap-1 w-fit">
-                          <CheckCircle2 className="h-3 w-3" /> Verified
+                          <CheckCircle2 className="h-3 w-3" /> Payment Verified
                         </Badge>
                       ) : (
                         <Badge
                           variant="outline"
                           className="text-orange-800 border-orange-300 bg-orange-100 hover:bg-orange-200 flex items-center gap-1 w-fit"
                         >
-                          <XCircle className="h-3 w-3" /> Pending
+                          <XCircle className="h-3 w-3" /> Payment Pending
                         </Badge>
                       )}
                     </TableCell>
                     <TableCell>
                       <Badge
-                        variant={user.is_admin ? "default" : "secondary"}
+                        variant={
+                          user.role === "ADMIN" ? "default" : "secondary"
+                        }
                         className="w-fit"
                       >
-                        {user.is_admin ? "Admin" : "Student"}
+                        {user.role === "ADMIN" ? "Admin" : "Student"}
                       </Badge>
                     </TableCell>
                   </TableRow>

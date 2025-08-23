@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { stackServerApp } from "@/stack";
 
 const prisma = new PrismaClient();
 
@@ -8,17 +9,34 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    // First find the user by MTC ID to get their user ID
-    const user = await prisma.registeredUsers.findFirst({
+    // Verify admin access
+    const currentUser = await stackServerApp.getUser();
+    if (!currentUser) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const adminUserData = await prisma.registeredUsers.findUnique({
+      where: { id: currentUser.id },
+    });
+
+    if (!adminUserData || adminUserData.role !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    // Find the payment by ID (params.id should be the payment ID)
+    const payment = await prisma.payments.findUnique({
       where: {
-        mtc_id: params.id,
+        id: parseInt(params.id),
+      },
+      include: {
+        user: true,
       },
     });
 
-    if (!user) {
+    if (!payment) {
       return NextResponse.json(
         {
-          error: "User not found",
+          error: "Payment not found",
         },
         { status: 404 }
       );
@@ -27,20 +45,10 @@ export async function POST(
     // Update the payment verification status
     const updatedPayment = await prisma.payments.update({
       where: {
-        id: user.id,
+        id: parseInt(params.id),
       },
       data: {
         payment_verified: true,
-      },
-    });
-
-    // Also update the user's verification status
-    await prisma.registeredUsers.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        is_verified: true,
       },
     });
 
