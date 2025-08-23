@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000; // 1 second
+const MAX_RETRIES = 1000;
+const RETRY_DELAY = 1;
 
 async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

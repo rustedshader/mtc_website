@@ -9,14 +9,8 @@ import {
 } from "@/components/ui/sheet";
 import { siteConfig } from "@/config/site";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/server";
 
 export async function AppSidebar() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const items = [
     {
       title: "Home",
@@ -38,27 +32,6 @@ export async function AppSidebar() {
       title: "Contact",
       href: "/contact",
     },
-    ...(user
-      ? [
-          {
-            title: "Dashboard",
-            href: "/user/dashboard",
-          },
-          {
-            title: "Sign Out",
-            href: "/logout",
-          },
-        ]
-      : [
-          {
-            title: "Sign In",
-            href: "/login",
-          },
-          {
-            title: "Join Us",
-            href: "/register",
-          },
-        ]),
   ];
 
   return (

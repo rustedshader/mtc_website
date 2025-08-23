@@ -24,7 +24,7 @@ export default async function Home() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const response = await fetch(`${baseUrl}/api/events`, {
-      next: { revalidate: 60 }, // Revalidate every minute
+      method: "GET",
     });
 
     if (!response.ok) {

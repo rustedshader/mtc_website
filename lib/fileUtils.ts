@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { createClient } from "@/utils/supabase/server";
 
 async function fileExists(filePath: string): Promise<boolean> {
   try {
@@ -116,38 +115,38 @@ export async function getAllImagesNameInBucket(
   folder: string = ""
 ): Promise<string[]> {
   // Create Supabase client
-  const supabase = await createClient();
 
   try {
-    // Fetch the list of files from the bucket
-    const { data, error } = await supabase.storage
-      .from(bucketName)
-      .list(folder);
+    // // Fetch the list of files from the bucket
+    // const { data, error } = await supabase.storage
+    //   .from(bucketName)
+    //   .list(folder);
 
-    // Check for errors
-    if (error) {
-      throw new Error(`Error fetching images: ${error.message}`);
-    }
+    // // Check for errors
+    // if (error) {
+    //   throw new Error(`Error fetching images: ${error.message}`);
+    // }
 
-    // Check if data exists and is not empty
-    if (!data || data.length === 0) {
-      console.log(`No files found in bucket: ${bucketName}, folder: ${folder}`);
-      return [];
-    }
+    // // Check if data exists and is not empty
+    // if (!data || data.length === 0) {
+    //   console.log(`No files found in bucket: ${bucketName}, folder: ${folder}`);
+    //   return [];
+    // }
 
-    // Filter for image files and map to names
-    const images = data
-      .filter((item) => {
-        // Ensure item has a name property
-        if (!item.name) return false;
-        return ["jpg", "jpeg", "png", "webm"].some((ext) =>
-          item.name.toLowerCase().endsWith(ext)
-        );
-      })
-      .map((item) => item.name);
+    // // Filter for image files and map to names
+    // const images = data
+    //   .filter((item) => {
+    //     // Ensure item has a name property
+    //     if (!item.name) return false;
+    //     return ["jpg", "jpeg", "png", "webm"].some((ext) =>
+    //       item.name.toLowerCase().endsWith(ext)
+    //     );
+    //   })
+    //   .map((item) => item.name);
 
-    // Log the result for debugging
-    console.log(`Found ${images.length} images in ${bucketName}/${folder}`);
+    // // Log the result for debugging
+    // console.log(`Found ${images.length} images in ${bucketName}/${folder}`);
+    const images: string[] = [];
 
     return images;
   } catch (error) {

@@ -3,55 +3,60 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Post {
-  id          Int      @id @default(autoincrement())
-  title       String
-  content     String?
-  published   Boolean  @default(false)
-  description String?
-  image       String?
-  date        DateTime?
-  location    String?
-  type        String   @default("event") // can be "event" or "blog"
-  slug        String   @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+enum Role {
+  USER
+  ADMIN
 }
 
 model RegisteredUsers {
-  student_name           String?
+  id                     String   @id
+  mtc_id                 String?
+  name                   String?
   university_sap_id      String?
   university_course      String?
   university_course_year String?
   university_email       String?
-  mtc_id                 String?
-  id                     Int      @id(map: "MTC_Users_pkey") @default(autoincrement())
   is_verified            Boolean? @default(false)
-  is_admin            Boolean? @default(false)
+  role                   Role     @default(USER)
+  created_at             DateTime @default(now())
+  payments               Payments[]
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String?
+  published   Boolean   @default(false)
+  description String?
+  image       String?
+  date        DateTime?
+  location    String?
+  type        String    @default("event")
+  slug        String    @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Payments {
-  id                     Int      @id(map: "MTC_Payments_pkey") @default(autoincrement())
-  mtc_id                 String?
-  student_name           String?
-  university_email       String?
-  university_sap_id      String?
+  id                      Int      @id @default(autoincrement())
+  user_id                 String
+  user                    RegisteredUsers @relation(fields: [user_id], references: [id])
   payment_refrence_number String?
-  payment_screenshot_url String?
-  payment_verified       Boolean? @default(false)
+  payment_screenshot_url  String?  
+  payment_verified        Boolean @default(false)
 }
 
 model Contact {
-  id        String   @id @default(cuid())
+  id        Int   @id @default(autoincrement())
   name      String
   email     String
   subject   String
   message   String
+  resolved  Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

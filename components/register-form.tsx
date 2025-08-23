@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import * as z from "zod";
 import { toast } from "sonner";
+import { UploadButton } from "@/utils/uploadthing";
 
 const registerSchema = z.object({
   student_name: z.string().min(1, {
@@ -186,6 +187,19 @@ export function RegisterForm({ user_email }: { user_email: string }) {
               <FormMessage />
             </FormItem>
           )}
+        />
+
+        <UploadButton
+          endpoint="imageUploader"
+          onClientUploadComplete={(res) => {
+            // Do something with the response
+            console.log("Files: ", res);
+            alert("Upload Completed");
+          }}
+          onUploadError={(error: Error) => {
+            // Do something with the error.
+            alert(`ERROR! ${error.message}`);
+          }}
         />
 
         {/* Payment Reference ID Field */}

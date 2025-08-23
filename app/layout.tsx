@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { StackProvider, StackTheme } from "@stackframe/stack";
+import { stackServerApp } from "../stack";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Inter } from "next/font/google";
@@ -31,7 +33,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${interSans.variable} ${interMono.variable} antialiased`}
-      >
+      ><StackProvider app={stackServerApp}><StackTheme>
         {/* Using Dark Theme Only ! */}
         <ThemeProvider
           attribute="class"
@@ -41,7 +43,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
-      </body>
+      </StackTheme></StackProvider></body>
     </html>
   );
 }
