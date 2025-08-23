@@ -6,6 +6,9 @@ import { BorderBeam } from "@/components/ui/border-beam";
 import EventsCarousel from "@/components/events-card";
 import Link from "next/link";
 import About from "@/components/about-section";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 //TODO What makes MTC Apart
 //TODO Add Achievments
@@ -18,20 +21,26 @@ import About from "@/components/about-section";
 // TODO Improve Landing Page
 
 export default async function Home() {
-  let events = [];
-  let error = null;
+  let events: any[] = [];
+  let error: string | null = null;
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const response = await fetch(`${baseUrl}/api/events`, {
-      method: "GET",
+    // Fetch events directly from database using Prisma
+    const dbEvents = await prisma.post.findMany({
+      where: {
+        published: true,
+        type: "event",
+      },
+      orderBy: {
+        date: "desc",
+      },
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch events");
-    }
-
-    events = await response.json();
+    // Map the events to match the expected format
+    events = dbEvents.map((event) => ({
+      ...event,
+      is_published: event.published,
+    }));
   } catch (err) {
     console.error("Error fetching events:", err);
     error = "Unable to load events at this time. Please try again later.";
