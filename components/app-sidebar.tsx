@@ -1,3 +1,5 @@
+"use server";
+
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,30 +11,85 @@ import {
 } from "@/components/ui/sheet";
 import { siteConfig } from "@/config/site";
 import Link from "next/link";
+import { stackServerApp } from "@/stack";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export async function AppSidebar() {
-  const items = [
-    {
-      title: "Home",
-      href: "/",
-    },
-    {
-      title: "About",
-      href: "/about",
-    },
-    {
-      title: "Events",
-      href: "/events",
-    },
-    {
-      title: "Sponsors",
-      href: "/sponsors",
-    },
-    {
-      title: "Contact",
-      href: "/contact",
-    },
-  ];
+  const user = await stackServerApp.getUser();
+
+  const getNavigationItems = async () => {
+    if (user) {
+      // Check user role to determine dashboard URL
+      let dashboardUrl = "/user/dashboard";
+
+      try {
+        const userData = await prisma.registeredUsers.findUnique({
+          where: { id: user.id },
+        });
+
+        if (userData && userData.role === "ADMIN") {
+          dashboardUrl = "/admin/dashboard";
+        }
+      } catch (error) {
+        console.error("Error checking user role:", error);
+        // Default to user dashboard if there's an error
+      }
+
+      return [
+        {
+          title: "Home",
+          href: "/",
+        },
+        {
+          title: "Our Team",
+          href: "/team",
+        },
+        {
+          title: "Memories",
+          href: "/gallery",
+        },
+        {
+          title: "Contact Us",
+          href: "/contact",
+        },
+        {
+          title: "Dashboard",
+          href: dashboardUrl,
+        },
+      ];
+    } else {
+      return [
+        {
+          title: "Home",
+          href: "/",
+        },
+        {
+          title: "Our Team",
+          href: "/team",
+        },
+        {
+          title: "Memories",
+          href: "/gallery",
+        },
+        {
+          title: "Contact Us",
+          href: "/contact",
+        },
+        {
+          title: "Sign In",
+          href: "/handler/sign-in",
+        },
+        {
+          title: "Sign Up",
+          href: "/handler/sign-up",
+        },
+      ];
+    }
+  };
+
+  const items = await getNavigationItems();
 
   return (
     <Sheet>
