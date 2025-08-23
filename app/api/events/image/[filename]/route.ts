@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-
+// TODO: Fix Here to get Image Url from Neon Db not Supabase
 export async function GET(
   request: Request,
   { params }: { params: { filename: string } }
@@ -14,7 +14,7 @@ export async function GET(
     }
 
     // Construct the proper Supabase URL
-    const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/storage/v1/object/public/images/events/${filename}`;
+    const imageUrl = `/events/${filename}`;
 
     return NextResponse.json({ url: imageUrl });
   } catch (error) {

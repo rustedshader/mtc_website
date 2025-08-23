@@ -162,7 +162,7 @@ export const CustomMdComponents = {
   }) => (
     <div className="my-4 md:my-8 flex justify-center items-center">
       <Image
-        src={`${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/${src}`}
+        src={`/${src}`}
         alt={alt || ""}
         width={500}
         height={500}

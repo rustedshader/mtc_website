@@ -1,5 +1,6 @@
 import { MainNav } from "@/components/main-nav";
 import Link from "next/link";
+import Image from "next/image";
 
 export function SiteHeader() {
   return (
@@ -7,9 +8,7 @@ export function SiteHeader() {
       <div className="flex h-14 items-center">
         <Link href="/" className="font-medium mx-4 text-sm flex items-center">
           <div className="flex flex-row items-center font-semibold gap-1">
-            <div className="w-11 h-11 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-              MTC
-            </div>
+            <Image src={`/logo.png`} alt="mtc-logo" width={50} height={50} />
             <div>Microsoft Technical Community</div>
           </div>
         </Link>

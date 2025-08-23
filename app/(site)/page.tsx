@@ -131,7 +131,7 @@ export default async function Home() {
                       {sponsor.logo && (
                         <div className="relative w-full h-20 sm:h-24 flex items-center justify-center">
                           <Image
-                            src={`${process.env.NEXT_PUBLIC_SUPABASE_DB_URL}/sponsers/${sponsor.logo}`}
+                            src={`/sponsers/${sponsor.logo}`}
                             alt={`${sponsor.name} logo`}
                             width={160}
                             height={80}
