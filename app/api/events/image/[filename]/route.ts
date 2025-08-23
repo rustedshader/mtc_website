@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 // TODO: Fix Here to get Image Url from Neon Db not Supabase
 export async function GET(
   request: Request,
-  { params }: { params: { filename: string } }
+  { params }: { params: Promise<{ filename: string }> }
 ) {
   try {
-    const filename = params.filename;
+    const { filename } = await params;
     if (!filename) {
       return NextResponse.json(
         { error: "Filename is required" },

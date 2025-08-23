@@ -1,33 +1,44 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { stackServerApp } from "@/stack";
 
 const prisma = new PrismaClient();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // First find the user by MTC ID to get their user ID
-    const user = await prisma.registeredUsers.findFirst({
-      where: {
-        mtc_id: params.id,
-      },
+    // Verify admin access
+    const user = await stackServerApp.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userData = await prisma.registeredUsers.findUnique({
+      where: { id: user.id },
     });
 
-    if (!user) {
+    if (!userData || userData.role !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    const { id } = await params;
+    const paymentId = parseInt(id);
+
+    if (isNaN(paymentId)) {
       return NextResponse.json(
-        {
-          error: "User not found",
-        },
-        { status: 404 }
+        { error: "Invalid payment ID" },
+        { status: 400 }
       );
     }
 
-    // Then find the payment using the user's ID
     const payment = await prisma.payments.findUnique({
       where: {
-        id: user.id,
+        id: paymentId,
+      },
+      include: {
+        user: true,
       },
     });
 

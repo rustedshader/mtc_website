@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify admin access
@@ -23,9 +23,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
+    const { id } = await params;
     await prisma.post.delete({
       where: {
-        id: parseInt(params.id),
+        id: parseInt(id),
       },
     });
 

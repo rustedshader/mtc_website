@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify admin access
@@ -23,6 +23,7 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
+    const { id } = await params;
     const data = await request.json();
     const { title, content, description, image, date, location, type } = data;
 
@@ -37,7 +38,7 @@ export async function PUT(
 
     const post = await prisma.post.update({
       where: {
-        id: parseInt(params.id),
+        id: parseInt(id),
       },
       data: {
         title,

@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify admin access
@@ -23,10 +23,11 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    // Find the payment by ID (params.id should be the payment ID)
+    const { id } = await params;
+    // Find the payment by ID (id should be the payment ID)
     const payment = await prisma.payments.findUnique({
       where: {
-        id: parseInt(params.id),
+        id: parseInt(id),
       },
       include: {
         user: true,
@@ -45,7 +46,7 @@ export async function POST(
     // Update the payment verification status
     const updatedPayment = await prisma.payments.update({
       where: {
-        id: parseInt(params.id),
+        id: parseInt(id),
       },
       data: {
         payment_verified: true,

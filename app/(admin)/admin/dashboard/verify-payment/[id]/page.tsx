@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getPaymentDetails, verifyPayment } from "@/lib/frontendApiFunctions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,18 +11,45 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle, AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
+import {
+  CheckCircle,
+  AlertCircle,
+  ArrowLeft,
+  Loader2,
+  Image,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { use } from "react";
 
-export default function VerifyUserPayment({
-  params,
-}: {
-  params: { id: string };
-}) {
+interface PaymentDetails {
+  id: number;
+  user_id: string;
+  payment_refrence_number: string | null;
+  payment_screenshot_url: string | null;
+  payment_verified: boolean;
+  user: {
+    id: string;
+    name: string | null;
+    university_email: string | null;
+    university_sap_id: string | null;
+    university_course: string | null;
+    university_course_year: string | null;
+    role: string;
+  };
+}
+
+type Props = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export default function VerifyUserPayment({ params }: Props) {
   const router = useRouter();
-  const [payment, setPayment] = useState<any>(null);
+  const resolvedParams = use(params);
+  const [payment, setPayment] = useState<PaymentDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [verifying, setVerifying] = useState(false);
@@ -35,7 +61,11 @@ export default function VerifyUserPayment({
   useEffect(() => {
     const fetchPaymentDetails = async () => {
       try {
-        const data = await getPaymentDetails(params.id);
+        const response = await fetch(`/api/payments/${resolvedParams.id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch payment details");
+        }
+        const data = await response.json();
         setPayment(data);
       } catch (error) {
         setError(
@@ -49,20 +79,35 @@ export default function VerifyUserPayment({
     };
 
     fetchPaymentDetails();
-  }, [params.id]);
+  }, [resolvedParams.id]);
 
   const handleVerifyPayment = async () => {
     try {
       setVerifying(true);
       setMessage(null);
-      await verifyPayment(params.id);
+
+      const response = await fetch(
+        `/api/payments/verify/${resolvedParams.id}`,
+        {
+          method: "POST",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to verify payment");
+      }
+
       setMessage({
         type: "success",
         text: "Payment verified successfully!",
       });
+
       // Refresh payment details
-      const updatedPayment = await getPaymentDetails(params.id);
-      setPayment(updatedPayment);
+      const updatedResponse = await fetch(`/api/payments/${resolvedParams.id}`);
+      if (updatedResponse.ok) {
+        const updatedData = await updatedResponse.json();
+        setPayment(updatedData);
+      }
     } catch (error) {
       setMessage({
         type: "error",
@@ -171,7 +216,9 @@ export default function VerifyUserPayment({
               <CardTitle className="text-2xl">Payment Verification</CardTitle>
               <CardDescription className="mt-2">
                 Review and verify payment details for{" "}
-                <span className="font-semibold">{payment.student_name}</span>
+                <span className="font-semibold">
+                  {payment.user.name || "N/A"}
+                </span>
               </CardDescription>
             </div>
             <Badge
@@ -196,22 +243,32 @@ export default function VerifyUserPayment({
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Name:</span>
-                  <span className="font-medium">{payment.student_name}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">MTC ID:</span>
-                  <span className="font-medium">{payment.mtc_id}</span>
+                  <span className="font-medium">
+                    {payment.user.name || "N/A"}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Email:</span>
                   <span className="font-medium">
-                    {payment.university_email}
+                    {payment.user.university_email || "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">SAP ID:</span>
                   <span className="font-medium">
-                    {payment.university_sap_id}
+                    {payment.user.university_sap_id || "N/A"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Course:</span>
+                  <span className="font-medium">
+                    {payment.user.university_course || "N/A"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Year:</span>
+                  <span className="font-medium">
+                    {payment.user.university_course_year || "N/A"}
                   </span>
                 </div>
               </div>
@@ -245,11 +302,17 @@ export default function VerifyUserPayment({
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Payment Screenshot</h3>
             <div className="relative aspect-video w-full max-w-2xl mx-auto bg-muted rounded-lg overflow-hidden">
-              <img
-                src={payment.payment_screenshot_url}
-                alt="Payment Screenshot"
-                className="object-contain w-full h-full"
-              />
+              {payment.payment_screenshot_url ? (
+                <img
+                  src={payment.payment_screenshot_url}
+                  alt="Payment Screenshot"
+                  className="object-contain w-full h-full"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full text-muted-foreground">
+                  No payment screenshot uploaded
+                </div>
+              )}
             </div>
           </div>
 
