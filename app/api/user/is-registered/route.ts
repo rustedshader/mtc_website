@@ -1,48 +1,45 @@
-import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { stackServerApp } from "@/stack";
 
 const prisma = new PrismaClient();
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const userEmail = searchParams.get("email");
-
-    if (!userEmail) {
-      return NextResponse.json(
-        { error: "userEmail is required" },
-        { status: 400 }
-      );
+    // Get the current user from Stack Auth
+    const user = await stackServerApp.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    // Query the database for a user with the provided email (case-insensitive).
-    const user = await prisma.registeredUsers.findFirst({
+
+    // Check if user is already registered
+    const registeredUser = await prisma.registeredUsers.findFirst({
       where: {
-        university_email: {
-          equals: userEmail.toLowerCase(),
-          mode: "insensitive",
-        },
+        id: user.id,
+      },
+      include: {
+        payments: true,
       },
     });
 
-    if (user) {
-      return NextResponse.json(
-        {
-          registered: true,
-        },
-        { status: 200 }
-      );
+    if (registeredUser) {
+      return NextResponse.json({
+        registered: true,
+        user: registeredUser,
+        isEmailVerified: user.primaryEmailVerified,
+        paymentVerified: registeredUser.payments[0]?.payment_verified || false,
+      });
     } else {
-      return NextResponse.json(
-        {
-          registered: false,
-        },
-        { status: 200 }
-      );
+      return NextResponse.json({
+        registered: false,
+      });
     }
   } catch (error) {
-    console.error("API error:", error);
+    console.error("Check registration error:", error);
     return NextResponse.json(
-      { error: "Failed to process request" },
+      {
+        error: "Internal server error",
+      },
       { status: 500 }
     );
   }

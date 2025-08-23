@@ -20,7 +20,6 @@ model RegisteredUsers {
   university_course      String?
   university_course_year String?
   university_email       String?
-  is_verified            Boolean? @default(false)
   role                   Role     @default(USER)
   created_at             DateTime @default(now())
   payments               Payments[]

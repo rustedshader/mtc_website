@@ -30,7 +30,7 @@ const registerSchema = z.object({
   year: z.string().min(1, {
     message: "Please enter a valid year",
   }),
-  payment_screenshot: z.any().refine((file) => file instanceof File, {
+  payment_screenshot: z.string().min(1, {
     message: "Please upload a payment screenshot",
   }),
   payment_reference_id: z.string().min(1, {
@@ -49,7 +49,7 @@ export function RegisterForm({ user_email }: { user_email: string }) {
       sap_id: "",
       course: "",
       year: "",
-      payment_screenshot: undefined,
+      payment_screenshot: "",
       payment_reference_id: "",
     },
   });
@@ -66,7 +66,7 @@ export function RegisterForm({ user_email }: { user_email: string }) {
       formData.append("student_sap_id", values.sap_id);
       formData.append("student_course", values.course);
       formData.append("student_course_year", values.year);
-      formData.append("payment_screenshot", values.payment_screenshot);
+      formData.append("payment_screenshot_url", values.payment_screenshot);
       formData.append("payment_refrence_number", values.payment_reference_id);
 
       // Submit the form data to the backend API
@@ -169,37 +169,44 @@ export function RegisterForm({ user_email }: { user_email: string }) {
           )}
         />
 
-        {/* Payment Screenshot Field (File Input) */}
+        {/* Payment Screenshot Field (Upload Button) */}
         <FormField
           control={form.control}
           name="payment_screenshot"
-          render={({ field: { value, onChange, ...fieldProps } }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Payment Screenshot</FormLabel>
               <FormControl>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => onChange(e.target.files?.[0])}
-                  {...fieldProps}
-                />
+                <div className="space-y-2">
+                  <UploadButton
+                    endpoint="imageUploader"
+                    onClientUploadComplete={(res) => {
+                      if (res && res[0]) {
+                        field.onChange(res[0].url);
+                        toast("Upload completed", {
+                          description:
+                            "Payment screenshot uploaded successfully.",
+                          duration: 3000,
+                        });
+                      }
+                    }}
+                    onUploadError={(error: Error) => {
+                      toast("Upload failed", {
+                        description: `Error: ${error.message}`,
+                        duration: 5000,
+                      });
+                    }}
+                  />
+                  {field.value && (
+                    <div className="text-sm text-green-600">
+                      ✓ Screenshot uploaded successfully
+                    </div>
+                  )}
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
-        />
-
-        <UploadButton
-          endpoint="imageUploader"
-          onClientUploadComplete={(res) => {
-            // Do something with the response
-            console.log("Files: ", res);
-            alert("Upload Completed");
-          }}
-          onUploadError={(error: Error) => {
-            // Do something with the error.
-            alert(`ERROR! ${error.message}`);
-          }}
         />
 
         {/* Payment Reference ID Field */}
